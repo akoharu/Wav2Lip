@@ -4,7 +4,7 @@ import os
 def get_image_list(data_root, split):
 	filelist = []
 
-	with open('filelists/{}.txt'.format(split)) as f:
+	with open(f'filelists/{split}.txt') as f:
 		for line in f:
 			line = line.strip()
 			if ' ' in line: line = line.split()[0]
@@ -14,10 +14,7 @@ def get_image_list(data_root, split):
 
 class HParams:
 	def __init__(self, **kwargs):
-		self.data = {}
-
-		for key, value in kwargs.items():
-			self.data[key] = value
+		self.data = dict(kwargs)
 
 	def __getattr__(self, key):
 		if key not in self.data:
@@ -97,5 +94,10 @@ hparams = HParams(
 
 def hparams_debug_string():
 	values = hparams.values()
-	hp = ["  %s: %s" % (name, values[name]) for name in sorted(values) if name != "sentences"]
+	hp = [
+		f"  {name}: {values[name]}"
+		for name in sorted(values)
+		if name != "sentences"
+	]
+
 	return "Hyperparameters:\n" + "\n".join(hp)
